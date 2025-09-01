@@ -1,0 +1,64 @@
+<!-- LINUX SHELL[01.sh] ~ git+ffprobe.exe(取得影片長度)+ffmpeg.exe(MP4影片 切割/分割/分段) -->
+<!-- LINUX SHELL[02.sh] ~ 分段影片檔名列表存成文字檔 -->
+<!-- playlit.html ~ 影片跳轉/跳躍/指定切換片段 + 播放(撥放) -->
+<!-- 影片播放: -->
+<p>
+    <video id="player" width="400" height="300" controls="" style="background:black;">
+    </video>
+    <br>
+    <div id="video-info"></div>
+    <br>
+    <select id="video-selector"></select>
+    <br>
+    <script>
+        var player = document.getElementById('player');
+        var videoInfo = document.getElementById('video-info');
+        var videoSelector = document.getElementById('video-selector');
+        var string1 = "https://github.com/jash-git/PAPAYA_Upscayl/raw/main/part/";
+        var string2 = "?raw=true";
+        var playlist = [
+			"part0000.mp4",
+			"part0001.mp4",
+			"part0002.mp4",
+			"part0003.mp4",
+			"part0004.mp4",
+			"part0005.mp4",
+        ];
+        var activeVideo = 0;
+
+        function updateVideoInfo() {
+            videoInfo.innerText = "目前播放第 " + (activeVideo + 1) + " 個影片，共 " + playlist.length + " 個影片";
+        }
+
+        function setVideoSource() {
+            var fileurl = string1 + playlist[activeVideo] + string2;
+            player.src = fileurl;
+            updateVideoInfo();
+        }
+
+        function populateVideoSelector() {
+            playlist.forEach((video, index) => {
+                var option = document.createElement('option');
+                option.value = index;
+                option.text = "影片 " + (index + 1);
+                videoSelector.appendChild(option);
+            });
+        }
+
+        player.addEventListener('ended', function(e) {
+            activeVideo = (++activeVideo) % playlist.length;
+            setVideoSource();
+            player.play();
+        });
+
+        videoSelector.addEventListener('change', function(e) {
+            activeVideo = parseInt(videoSelector.value);
+            setVideoSource();
+            player.play();
+        });
+
+        populateVideoSelector();
+        setVideoSource();
+    </script>
+    <br>
+</p>
